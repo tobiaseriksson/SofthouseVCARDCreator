@@ -296,8 +296,8 @@ public class sslpost {
 	
 	public VCard parseHTMLForVCardInformation( String html ) {
 		VCard vcard = new VCard();
-		//Pattern findFullnamePattern = Pattern.compile("txtheader\">([\\wåäöÅÄÖ]+)\\s+([\\wåäöÅÄÖ]+)");
-		Pattern findFullnamePattern = Pattern.compile("txtheader\">([\\s\\d\\wåäöÅÄÖé]+)\\suppgifter<\\/div");
+		//Pattern findFullnamePattern = Pattern.compile("txtheader\">([\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)\\s+([\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
+		Pattern findFullnamePattern = Pattern.compile("txtheader\">([\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)\\suppgifter<\\/div");
 		Matcher findFullnameMatcher = null;
 		
 		// <td class="maintxt">Mobilnr&nbsp;&nbsp;</td><td class="maintxt">0768-640324</td>
@@ -311,14 +311,14 @@ public class sslpost {
 		Pattern findEMailPattern = Pattern.compile("E-post.*mailto:([a-zA-Z0-9._+\\-@]+)");
 		Matcher findEMailMatcher = null;
 
-		// <tr><td class=\"maintxt\">Besöksadress&nbsp;&nbsp;</td><td class=\"maintxt\">Ölandsgatan 42</td></tr><tr><td class=\"maintxt\">Postadress&nbsp;&nbsp;</td><td class=\"maintxt\">Ölandsgatan 42</td></tr><tr><td class=\"maintxt\">Postnr&nbsp;&nbsp;</td><td class=\"maintxt\">116 63</td></tr><tr><td class=\"maintxt\">Postort&nbsp;&nbsp;</td><td class=\"maintxt\">STOCKHOLM</td></tr><tr><td class=\"maintxt\">Land&nbsp;&nbsp;</td><td class=\"maintxt\">Sverige</td></tr><tr><td class=\"maintxt\">E-post&nbsp;&nbsp;</td><td class=\"maintxt\">";
-		Pattern findStreetPattern = Pattern.compile("Besöksadress&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wåäöÅÄÖé]+)");
+		// <tr><td class=\"maintxt\">Besï¿½ksadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postnr&nbsp;&nbsp;</td><td class=\"maintxt\">116 63</td></tr><tr><td class=\"maintxt\">Postort&nbsp;&nbsp;</td><td class=\"maintxt\">STOCKHOLM</td></tr><tr><td class=\"maintxt\">Land&nbsp;&nbsp;</td><td class=\"maintxt\">Sverige</td></tr><tr><td class=\"maintxt\">E-post&nbsp;&nbsp;</td><td class=\"maintxt\">";
+		Pattern findStreetPattern = Pattern.compile("Besï¿½ksadress&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
 		Matcher findStreetMatcher = null;
-		Pattern findZipPattern = Pattern.compile("Postnr&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wåäöÅÄÖé]+)");
+		Pattern findZipPattern = Pattern.compile("Postnr&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
 		Matcher findZipMatcher = null;
-		Pattern findCityPattern = Pattern.compile("Postort&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wåäöÅÄÖé]+)");
+		Pattern findCityPattern = Pattern.compile("Postort&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
 		Matcher findCityMatcher = null;
-		Pattern findCountryPattern = Pattern.compile("Land&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wåäöÅÄÖé]+)");
+		Pattern findCountryPattern = Pattern.compile("Land&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
 		Matcher findCountryMatcher = null;
 		
 		
@@ -367,12 +367,12 @@ public class sslpost {
 	
 	public void testVCardParsing() {
 		sslpost vcardCreator = new sslpost();
-		String html = "<div class=\"txtheader\">Björn 2 Eriksson uppgifter</div>\n";
+		String html = "<div class=\"txtheader\">Bjï¿½rn 2 Eriksson uppgifter</div>\n";
 		html += "<td class=\"maintxt\">Mobilnr&nbsp;&nbsp;</td><td class=\"maintxt\">0768-640324</td>\n";
 		html += "<td class=\"maintxt\">Mobilnr&nbsp;&nbsp;</td><td class=\"maintxt\">+45768 - 64 03 24</td>\n";
 		html += "class=\"maintxt\">E-post&nbsp;&nbsp;</td><td class=\"maintxt\"><a href=\"mailto:bjorn.eriksson@softhouse.se\" style=\"font-weight:normal\">bjorn.eriksson@softhouse.se</a></td>\n";
 		html += " <td class=\"maintxt\">Mobilnr&nbsp;&nbsp;</td><td class=\"maintxt\">0706-643916</td></tr><tr><td class=\"maintxt\">Faxnr&nbsp;&nbsp;</td><td class=\"maintxt\">040-664 39 19</td></tr><tr><td valign=\"top\" class=\"maintxt\">Tips</td><td class=\"maintxt\">Koppla</td></tr>";
-		html += "<tr><td class=\"maintxt\">Besöksadress&nbsp;&nbsp;</td><td class=\"maintxt\">Ölandsgatan 42</td></tr><tr><td class=\"maintxt\">Postadress&nbsp;&nbsp;</td><td class=\"maintxt\">Ölandsgatan 42</td></tr><tr><td class=\"maintxt\">Postnr&nbsp;&nbsp;</td><td class=\"maintxt\">116 63</td></tr><tr><td class=\"maintxt\">Postort&nbsp;&nbsp;</td><td class=\"maintxt\">STOCKHOLM</td></tr><tr><td class=\"maintxt\">Land&nbsp;&nbsp;</td><td class=\"maintxt\">Sverige</td></tr><tr><td class=\"maintxt\">E-post&nbsp;&nbsp;</td><td class=\"maintxt\">";
+		html += "<tr><td class=\"maintxt\">Besï¿½ksadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postnr&nbsp;&nbsp;</td><td class=\"maintxt\">116 63</td></tr><tr><td class=\"maintxt\">Postort&nbsp;&nbsp;</td><td class=\"maintxt\">STOCKHOLM</td></tr><tr><td class=\"maintxt\">Land&nbsp;&nbsp;</td><td class=\"maintxt\">Sverige</td></tr><tr><td class=\"maintxt\">E-post&nbsp;&nbsp;</td><td class=\"maintxt\">";
 		VCard vcard = vcardCreator.parseHTMLForVCardInformation(html);
 		System.out.println( "vcard "+vcard.fullName );
 		
@@ -412,7 +412,7 @@ public class sslpost {
 		try {
 			urlParameters =
 				"p_ank=" + URLEncoder.encode("0768832453", "UTF-8") +        
-				"&p_pswd=" + URLEncoder.encode("VNaxL9IY", "UTF-8");
+				"&p_pswd=" + URLEncoder.encode("xxxpasswordxxxx", "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
