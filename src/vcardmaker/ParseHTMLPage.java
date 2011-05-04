@@ -290,8 +290,8 @@ public class ParseHTMLPage {
     
     public static void retrieveVCardsFromSofthouseIntranet() {
     	
-    	// String url = "https://baltic.softhouse.se/wiki/doku.php?id=personal&u=toe&p=##lindae03";
-    	String url = "https://intra.softhouse.se/karlskronawiki/-/wiki/Karlskrona/Personal?id=personal&u=toe&p=##lindae03";
+    	// String url = "https://baltic.softhouse.se/wiki/doku.php?id=personal&u=toe&p=some-password";
+    	String url = "https://intra.softhouse.se/karlskronawiki/-/wiki/Karlskrona/Personal?id=personal&u=toe&p=some-password";
     	String imgBaseURL = "https://baltic.softhouse.se/wiki/lib/exe/fetch.php?cache=cache&u=my_user_name&p=my_password&media=";
     	ParseHTMLPage parser = new ParseHTMLPage( imgBaseURL, url );
     	parser.init();
