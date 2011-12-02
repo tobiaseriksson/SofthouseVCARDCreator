@@ -15,6 +15,7 @@ package vcardmaker;
  */
 import java.io.*;
 import java.net.*;
+import java.security.KeyStore;
 import java.security.Security.*;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -83,6 +84,7 @@ public class sslpost {
 		URL url;
 		HttpURLConnection connection = null;
 		try { // Create connection
+			KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 			System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
 			java.security.Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 			url = new URL(targetURL);
@@ -199,7 +201,7 @@ public class sslpost {
 				System.out.println( "location="+connection.getHeaderField("Location") );
 			}
 			InputStream is = connection.getInputStream();
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is,"8859_1"));
 			String line;
 			while ((line = rd.readLine()) != null) {
 				response.append(line);
@@ -295,14 +297,16 @@ public class sslpost {
 	
 	
 	public VCard parseHTMLForVCardInformation( String html ) {
+		System.out.println( "***********************\n"+html );
 		VCard vcard = new VCard();
 		//Pattern findFullnamePattern = Pattern.compile("txtheader\">([\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)\\s+([\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
-		Pattern findFullnamePattern = Pattern.compile("txtheader\">([\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)\\suppgifter<\\/div");
+		Pattern findFullnamePattern = Pattern.compile("txtheader\">(.+)\\suppgifter<\\/div");
 		Matcher findFullnameMatcher = null;
 		
 		// <td class="maintxt">Mobilnr&nbsp;&nbsp;</td><td class="maintxt">0768-640324</td>
+		// <td class="maintxt">Mobilnummer&nbsp;&nbsp;</td><td class="maintxt">0768-640336</td>
 		// Pattern findMobilephoneNumberPattern = Pattern.compile("Mobilnr.*>([\\s\\d-]+)");
-		Pattern findMobilephoneNumberPattern = Pattern.compile("Mobilnr&nbsp;&nbsp;<.td><td class=\"maintxt\">([\\s\\d-+]+)");
+		Pattern findMobilephoneNumberPattern = Pattern.compile("Mobilnummer&nbsp;&nbsp;<.td><td class=\"maintxt\">([\\s\\d-+]+)");
 		Matcher findMobilephoneNumberMatcher = null;
 
 		
@@ -311,13 +315,17 @@ public class sslpost {
 		Pattern findEMailPattern = Pattern.compile("E-post.*mailto:([a-zA-Z0-9._+\\-@]+)");
 		Matcher findEMailMatcher = null;
 
-		// <tr><td class=\"maintxt\">Besï¿½ksadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postnr&nbsp;&nbsp;</td><td class=\"maintxt\">116 63</td></tr><tr><td class=\"maintxt\">Postort&nbsp;&nbsp;</td><td class=\"maintxt\">STOCKHOLM</td></tr><tr><td class=\"maintxt\">Land&nbsp;&nbsp;</td><td class=\"maintxt\">Sverige</td></tr><tr><td class=\"maintxt\">E-post&nbsp;&nbsp;</td><td class=\"maintxt\">";
-		Pattern findStreetPattern = Pattern.compile("Besï¿½ksadress&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
+		// <td class=\"maintxt\">Besï¿½ksadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postadress&nbsp;&nbsp;</td><td class=\"maintxt\">ï¿½landsgatan 42</td></tr><tr><td class=\"maintxt\">Postnr&nbsp;&nbsp;</td><td class=\"maintxt\">116 63</td></tr><tr><td class=\"maintxt\">Postort&nbsp;&nbsp;</td><td class=\"maintxt\">STOCKHOLM</td></tr><tr><td class=\"maintxt\">Land&nbsp;&nbsp;</td><td class=\"maintxt\">Sverige</td></tr><tr><td class=\"maintxt\">E-post&nbsp;&nbsp;</td><td class=\"maintxt\">";
+		// <td class="maintxt">Besöksadress&nbsp;&nbsp;</td><td class="maintxt">Tegnérgatan 37</td>
+		Pattern findStreetPattern = Pattern.compile("Bes.ksadress&nbsp;&nbsp;<.td><td class=\"maintxt\">([^<]+)");
 		Matcher findStreetMatcher = null;
+		// <td class="maintxt">Postnr&nbsp;&nbsp;</td><td class="maintxt">111 61</td>
 		Pattern findZipPattern = Pattern.compile("Postnr&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
 		Matcher findZipMatcher = null;
+		// <td class="maintxt">Postort&nbsp;&nbsp;</td><td class="maintxt">STOCKHOLM</td>
 		Pattern findCityPattern = Pattern.compile("Postort&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
 		Matcher findCityMatcher = null;
+		// <td class="maintxt">Land&nbsp;&nbsp;</td><td class="maintxt">Sverige</td>
 		Pattern findCountryPattern = Pattern.compile("Land&nbsp;&nbsp;<.td><td class=\"maintxt\">([-+\\s\\d\\wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
 		Matcher findCountryMatcher = null;
 		
@@ -412,7 +420,7 @@ public class sslpost {
 		try {
 			urlParameters =
 				"p_ank=" + URLEncoder.encode("0768832453", "UTF-8") +        
-				"&p_pswd=" + URLEncoder.encode("xxxpasswordxxxx", "UTF-8");
+				"&p_pswd=" + URLEncoder.encode("password", "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -483,6 +491,7 @@ public class sslpost {
 	      	vcard.photoBase64Encoded = base64EncodedImage;
 	      	vcard.uid = userId;
 			vcards.add( vcard );
+			
 		}
 		
 		
@@ -495,7 +504,8 @@ public class sslpost {
 		VCard vcard = null;
 		try {
 	    		String vcardString = "";
-				FileWriter fw = new FileWriter( "softhouse.vcf" );							
+				// FileWriter fw = new FileWriter( "softhouse.vcf" );	
+				Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("softhouse.vcf"), "UTF8"));
 		    	while( vcardItr.hasNext() ) {
 		    		vcard = vcardItr.next();
 		    		System.out.println( "name:"+vcard.fullName );
